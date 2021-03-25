@@ -1,0 +1,112 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://assets/guy_damaged.png" type="Texture" id=1]
+[ext_resource path="res://Player1.gd" type="Script" id=2]
+[ext_resource path="res://assets/guy_idle.png" type="Texture" id=3]
+[ext_resource path="res://assets/guy_move2.png" type="Texture" id=4]
+[ext_resource path="res://assets/guy_attack1.png" type="Texture" id=5]
+[ext_resource path="res://assets/guy_attack2.png" type="Texture" id=6]
+[ext_resource path="res://assets/guy_dead.png" type="Texture" id=7]
+[ext_resource path="res://assets/guy_move1.png" type="Texture" id=8]
+[ext_resource path="res://assets/guy_move3.png" type="Texture" id=9]
+[ext_resource path="res://assets/slash.png" type="Texture" id=10]
+[ext_resource path="res://assets/guy_shielding.png" type="Texture" id=11]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 11 ) ],
+"loop": true,
+"name": "block",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "dead",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "damaged",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "attack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 4 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "run",
+"speed": 7.5
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 16.4439
+height = 20.523
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 16.7165
+height = 31.542
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 17.158
+height = 26.2722
+
+[sub_resource type="CapsuleShape2D" id=5]
+height = 19.7452
+
+[node name="Player1" type="KinematicBody2D"]
+collision_mask = 7
+script = ExtResource( 2 )
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+position = Vector2( -5, 0 )
+frames = SubResource( 1 )
+animation = "attack"
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="Slash" type="Sprite" parent="Hitbox"]
+visible = false
+position = Vector2( -45, -50 )
+scale = Vector2( 0.851013, 0.851013 )
+texture = ExtResource( 10 )
+centered = false
+
+[node name="HitboxShape" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( -22.5, -18 )
+rotation = 0.6353
+shape = SubResource( 3 )
+disabled = true
+
+[node name="HurtboxP1" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="HurtboxShape" type="CollisionShape2D" parent="HurtboxP1"]
+shape = SubResource( 4 )
+
+[node name="DownThrust" type="Area2D" parent="."]
+
+[node name="DownThrustShape" type="CollisionShape2D" parent="DownThrust"]
+position = Vector2( 0, 32 )
+shape = SubResource( 5 )
+disabled = true
+
+[node name="ThrowPoint" type="Position2D" parent="."]
+position = Vector2( 20, 0 )
+[connection signal="area_entered" from="HurtboxP1" to="." method="_on_Hurtbox_area_entered"]
